@@ -13,10 +13,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Add SSH Key
+      - name: Add SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.VM_SSH_KEY }}  # Ensure the secret name matches what you have in GitHub secrets
+          ssh-private-key: ${{ secrets.VM_SSH_KEY }}
+
+      - name: Disable host key checking
+        run: echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null" >> ~/.ssh/config
 
       - name: Debug SSH Agent
         run: |
