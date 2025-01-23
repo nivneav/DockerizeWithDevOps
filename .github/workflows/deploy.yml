@@ -1,4 +1,4 @@
-name: Deploy Apache with Ansible
+name: Deploy Apache in Docker
 
 on:
   push:
@@ -10,29 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout repository
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up SSH key for Ansible
-    - name: Add SSH key
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.VM_SSH_KEY }}
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.VM_SSH_KEY }}
 
-    # Step 3: Add the VM to known_hosts
-    - name: Add VM to known_hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H 20.52.1.89 >> ~/.ssh/known_hosts
+      - name: Install Ansible
+        run: sudo apt-get update && sudo apt-get install -y ansible
 
-    # Step 4: Install Ansible
-    - name: Install Ansible
-      run: |
-        sudo apt update
-        sudo apt install -y ansible
-
-    # Step 5: Run Ansible playbook
-    - name: Run Ansible Playbook
-      run: |
-        ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml
+      - name: Run Ansible Playbook
+        run: ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml
