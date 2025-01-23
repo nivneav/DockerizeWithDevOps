@@ -36,11 +36,20 @@
     state: started
     enabled: true
 
+# Copy HTML file (index.html) into Docker container's web root
+- name: Copy HTML file to Apache container
+  copy:
+    src: "C:/Users/vitalie.nivnea/DockerizeWithDevOps/index.html"  # Update with the actual path of your local HTML file
+    dest: "/tmp/index.html"  # Temporary location in the container
+
 # Run Apache container
-- name: Start Apache container
+- name: Start Apache container with mounted volume
   docker_container:
     name: apache-server
     image: httpd:latest
     state: started
     ports:
       - "80:80"
+    volumes:
+      - "C:/Users/vitalie.nivnea/DockerizeWithDevOps:/usr/local/apache2/htdocs"  # Mount local folder to container's web root
+
