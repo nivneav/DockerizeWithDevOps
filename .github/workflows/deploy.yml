@@ -16,10 +16,19 @@ jobs:
       - name: Add SSH Key
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.VM_SSH_KEY }}
+          ssh-private-key: ${{ secrets.VM_SSH_KEY }}  # Ensure the secret name matches what you have in GitHub secrets
+
+      - name: Debug SSH Agent
+        run: |
+          ssh-add -l
+          ssh -T git@github.com || true
 
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
+      - name: Test SSH Connection
+        run: |
+          ssh -i /home/runner/.ssh/id_rsa core-admin@20.52.1.89 'echo "SSH Connected!"'
+
       - name: Run Ansible Playbook
-        run: ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml
+        run: ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml -vvvv
