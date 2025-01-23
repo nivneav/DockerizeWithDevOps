@@ -1,0 +1,3 @@
+# vars.yml
+web_ip: 20.52.1.89
+ansible_user: core-admin
