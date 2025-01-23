@@ -12,7 +12,9 @@
 
 # Add Docker's GPG key
 - name: Add Docker GPG key
-  command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  shell: |
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /tmp/docker.gpg
+    apt-key add /tmp/docker.gpg
 
 # Add Docker repository
 - name: Add Docker repository
