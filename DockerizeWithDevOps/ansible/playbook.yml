@@ -1,0 +1,6 @@
+---
+- name: Setup Apache in Docker
+  hosts: web
+  become: yes
+  roles:
+    - docker

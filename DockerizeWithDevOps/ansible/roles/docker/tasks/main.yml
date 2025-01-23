@@ -1,0 +1,44 @@
+---
+# Install prerequisites
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
+# Add Docker's GPG key
+- name: Add Docker GPG key
+  command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+# Add Docker repository
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+# Install Docker
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+
+# Start and enable Docker
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+# Run Apache container
+- name: Start Apache container
+  docker_container:
+    name: apache-server
+    image: httpd:latest
+    state: started
+    ports:
+      - "80:80"
